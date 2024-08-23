@@ -28,23 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
             buttonInitializeNN = new Button();
             SuspendLayout();
             // 
-            // button1
-            // 
-            button1.Location = new Point(12, 12);
-            button1.Name = "button1";
-            button1.Size = new Size(91, 56);
-            button1.TabIndex = 0;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
             // buttonInitializeNN
             // 
-            buttonInitializeNN.Location = new Point(12, 90);
+            buttonInitializeNN.Location = new Point(12, 12);
             buttonInitializeNN.Name = "buttonInitializeNN";
             buttonInitializeNN.Size = new Size(91, 44);
             buttonInitializeNN.TabIndex = 1;
@@ -58,15 +47,12 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(buttonInitializeNN);
-            Controls.Add(button1);
             Name = "Form1";
             Text = "Form1";
             ResumeLayout(false);
         }
 
         #endregion
-
-        private Button button1;
         private Button buttonInitializeNN;
     }
 }

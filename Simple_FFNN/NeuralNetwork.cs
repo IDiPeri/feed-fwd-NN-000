@@ -63,7 +63,7 @@ namespace Simple_FFNN
                 // Weight matrix should be previousOutputCount (rows) x currentInputCount (count)
                 Matrix<double> weights = DenseMatrix.OfArray(new double[previousOutputCount, currentInputCount]);
 
-                // Initialize the weight
+                // Initialize the weights
                 for(int r = 0; r < previousOutputCount; r++)
                 {
                     for (int c = 0; c < currentInputCount; c++)
