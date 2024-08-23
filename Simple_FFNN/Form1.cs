@@ -24,5 +24,23 @@ namespace Simple_FFNN
             int i;
             i = 0; ;
         }
+
+        private void buttonInitializeNN_Click(object sender, EventArgs e)
+        {
+            m_NeuralNetwork = new NeuralNetwork(inputsCount:2, hiddenLayerCount:1, nodesPerHiddenLayer:9, outputCount:1);
+
+            Vector<double> inputs = DenseVector.OfArray(new double[2]);
+            inputs[0] = 0.25;
+            inputs[1] = 0.15;
+
+            m_NeuralNetwork.SetInputs(inputs);
+            m_NeuralNetwork.PropagateInputsFwd();
+
+            //var lastLayer = m_NeuralNetwork.Layers[m_NeuralNetwork.Layers.Count - 1];
+            //var outputs = lastLayer.Outputs;
+            var outputs = m_NeuralNetwork.GetOutputs();
+        }
+
+        private NeuralNetwork m_NeuralNetwork;
     }
 }
