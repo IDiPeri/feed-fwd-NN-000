@@ -19,6 +19,9 @@ namespace Simple_FFNN
 
         public const double ActivationFunctionCurvature = 0.2;
 
+        public const double TRUE = 0.5;
+        public const double FALSE = -0.5;
+
         /// <summary>
         /// Simple constructor to create a custom sized NN
         /// </summary>
