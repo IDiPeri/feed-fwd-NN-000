@@ -318,8 +318,8 @@ namespace Simple_FFNN
                 {
                     case TrainingPattern.LessThan:
                         Coordinate_TrainingPattern_LessThan(outputIsPositive, out x_coord, out y_coord);
-                        x_pixel = (int)((x_coord + 0.5) * (imageWidth -1) + 0.5);
-                        y_pixel = (int)((y_coord + 0.5) * (imageHeight-1) + 0.5);
+                        x_pixel = (int)((x_coord + 0.5) * (imageWidth - 1) + 0.5);
+                        y_pixel = (int)((y_coord + 0.5) * (imageHeight - 1) + 0.5);
                         trainingImage.SetPixel(x_pixel, y_pixel, pixelColor);
                         double fnOutput = TrainingPattern_LessThan(x_coord, y_coord);
                         //!FIX: check fnOutput against expectedOutput
@@ -359,6 +359,35 @@ namespace Simple_FFNN
             m_NeuralNetwork.PropagateInputsFwd();
 
             var outputs = m_NeuralNetwork.GetOutputs();
+        }
+
+        private double CurrentNNFunction(double x, double y)
+        {
+            Vector<double> inputs = DenseVector.OfArray(new double[2]);
+            inputs[0] = x;
+            inputs[1] = y;
+
+            m_NeuralNetwork.SetInputs(inputs);
+            m_NeuralNetwork.PropagateInputsFwd();
+
+            var outputs = m_NeuralNetwork.GetOutputs();
+            return outputs[0];
+        }
+
+        private void buttonDisplayCurrentNN_Click(object sender, EventArgs e)
+        {
+            Bitmap currentNNImage;
+            int imageWidth = 128;
+            int imageHeight = 128;
+            currentNNImage = GenerateImage(imageWidth, imageHeight, CurrentNNFunction);
+
+            if (training_pictureBox_CurrentNN.Image != null)
+            {
+                var oldImage = training_pictureBox_CurrentNN.Image;
+                training_pictureBox_CurrentNN.Image = null;
+                oldImage.Dispose();
+            }
+            training_pictureBox_CurrentNN.Image = currentNNImage;
         }
 
         #endregion

@@ -32,6 +32,10 @@
             training_pictureBox_TrainingPattern = new PictureBox();
             label1 = new Label();
             groupBox_TrainingPattern = new GroupBox();
+            groupBox2 = new GroupBox();
+            radioButton_TestInvFn_False = new RadioButton();
+            radioButton_TestInvFn_True = new RadioButton();
+            buttonTestInvFn = new Button();
             groupBox1 = new GroupBox();
             radioButton_CircleInSquare = new RadioButton();
             radioButton_LessThan = new RadioButton();
@@ -44,22 +48,21 @@
             setup_textBox_NodesPerHiddenLayer = new TextBox();
             tabPage_Training = new TabPage();
             training_button_Next = new Button();
-            buttonTestInvFn = new Button();
-            groupBox2 = new GroupBox();
-            radioButton_TestInvFn_True = new RadioButton();
-            radioButton_TestInvFn_False = new RadioButton();
+            buttonDisplayCurrentNN = new Button();
+            training_pictureBox_CurrentNN = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)training_pictureBox_TrainingPattern).BeginInit();
             groupBox_TrainingPattern.SuspendLayout();
+            groupBox2.SuspendLayout();
             groupBox1.SuspendLayout();
             tabControl_WorkFlow.SuspendLayout();
             tabPage_Setup.SuspendLayout();
             tabPage_Training.SuspendLayout();
-            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)training_pictureBox_CurrentNN).BeginInit();
             SuspendLayout();
             // 
             // buttonInitializeNN
             // 
-            buttonInitializeNN.Location = new Point(494, 151);
+            buttonInitializeNN.Location = new Point(308, 390);
             buttonInitializeNN.Name = "buttonInitializeNN";
             buttonInitializeNN.Size = new Size(91, 44);
             buttonInitializeNN.TabIndex = 1;
@@ -96,6 +99,48 @@
             groupBox_TrainingPattern.TabIndex = 4;
             groupBox_TrainingPattern.TabStop = false;
             groupBox_TrainingPattern.Text = "Training Pattern";
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(radioButton_TestInvFn_False);
+            groupBox2.Controls.Add(radioButton_TestInvFn_True);
+            groupBox2.Location = new Point(201, 160);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(143, 56);
+            groupBox2.TabIndex = 9;
+            groupBox2.TabStop = false;
+            // 
+            // radioButton_TestInvFn_False
+            // 
+            radioButton_TestInvFn_False.AutoSize = true;
+            radioButton_TestInvFn_False.Location = new Point(70, 20);
+            radioButton_TestInvFn_False.Name = "radioButton_TestInvFn_False";
+            radioButton_TestInvFn_False.Size = new Size(62, 24);
+            radioButton_TestInvFn_False.TabIndex = 6;
+            radioButton_TestInvFn_False.Text = "False";
+            radioButton_TestInvFn_False.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_TestInvFn_True
+            // 
+            radioButton_TestInvFn_True.AutoSize = true;
+            radioButton_TestInvFn_True.Checked = true;
+            radioButton_TestInvFn_True.Location = new Point(6, 20);
+            radioButton_TestInvFn_True.Name = "radioButton_TestInvFn_True";
+            radioButton_TestInvFn_True.Size = new Size(58, 24);
+            radioButton_TestInvFn_True.TabIndex = 5;
+            radioButton_TestInvFn_True.TabStop = true;
+            radioButton_TestInvFn_True.Text = "True";
+            radioButton_TestInvFn_True.UseVisualStyleBackColor = true;
+            // 
+            // buttonTestInvFn
+            // 
+            buttonTestInvFn.Location = new Point(6, 170);
+            buttonTestInvFn.Name = "buttonTestInvFn";
+            buttonTestInvFn.Size = new Size(172, 44);
+            buttonTestInvFn.TabIndex = 9;
+            buttonTestInvFn.Text = "Test Inverse Fn";
+            buttonTestInvFn.UseVisualStyleBackColor = true;
+            buttonTestInvFn.Click += buttonTestInvFn_Click;
             // 
             // groupBox1
             // 
@@ -208,6 +253,8 @@
             // 
             // tabPage_Training
             // 
+            tabPage_Training.Controls.Add(training_pictureBox_CurrentNN);
+            tabPage_Training.Controls.Add(buttonDisplayCurrentNN);
             tabPage_Training.Controls.Add(training_button_Next);
             tabPage_Training.Controls.Add(groupBox_TrainingPattern);
             tabPage_Training.Controls.Add(buttonInitializeNN);
@@ -229,46 +276,23 @@
             training_button_Next.Text = "Next...";
             training_button_Next.UseVisualStyleBackColor = true;
             // 
-            // buttonTestInvFn
+            // buttonDisplayCurrentNN
             // 
-            buttonTestInvFn.Location = new Point(6, 170);
-            buttonTestInvFn.Name = "buttonTestInvFn";
-            buttonTestInvFn.Size = new Size(172, 44);
-            buttonTestInvFn.TabIndex = 9;
-            buttonTestInvFn.Text = "Test Inverse Fn";
-            buttonTestInvFn.UseVisualStyleBackColor = true;
-            buttonTestInvFn.Click += buttonTestInvFn_Click;
+            buttonDisplayCurrentNN.Location = new Point(421, 40);
+            buttonDisplayCurrentNN.Name = "buttonDisplayCurrentNN";
+            buttonDisplayCurrentNN.Size = new Size(156, 44);
+            buttonDisplayCurrentNN.TabIndex = 9;
+            buttonDisplayCurrentNN.Text = "Display Current NN";
+            buttonDisplayCurrentNN.UseVisualStyleBackColor = true;
+            buttonDisplayCurrentNN.Click += buttonDisplayCurrentNN_Click;
             // 
-            // groupBox2
+            // training_pictureBox_CurrentNN
             // 
-            groupBox2.Controls.Add(radioButton_TestInvFn_False);
-            groupBox2.Controls.Add(radioButton_TestInvFn_True);
-            groupBox2.Location = new Point(201, 160);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(143, 56);
-            groupBox2.TabIndex = 9;
-            groupBox2.TabStop = false;
-            // 
-            // radioButton_TestInvFn_True
-            // 
-            radioButton_TestInvFn_True.AutoSize = true;
-            radioButton_TestInvFn_True.Checked = true;
-            radioButton_TestInvFn_True.Location = new Point(6, 20);
-            radioButton_TestInvFn_True.Name = "radioButton_TestInvFn_True";
-            radioButton_TestInvFn_True.Size = new Size(58, 24);
-            radioButton_TestInvFn_True.TabIndex = 5;
-            radioButton_TestInvFn_True.Text = "True";
-            radioButton_TestInvFn_True.UseVisualStyleBackColor = true;
-            // 
-            // radioButton_TestInvFn_False
-            // 
-            radioButton_TestInvFn_False.AutoSize = true;
-            radioButton_TestInvFn_False.Location = new Point(70, 20);
-            radioButton_TestInvFn_False.Name = "radioButton_TestInvFn_False";
-            radioButton_TestInvFn_False.Size = new Size(62, 24);
-            radioButton_TestInvFn_False.TabIndex = 6;
-            radioButton_TestInvFn_False.Text = "False";
-            radioButton_TestInvFn_False.UseVisualStyleBackColor = true;
+            training_pictureBox_CurrentNN.Location = new Point(421, 93);
+            training_pictureBox_CurrentNN.Name = "training_pictureBox_CurrentNN";
+            training_pictureBox_CurrentNN.Size = new Size(128, 128);
+            training_pictureBox_CurrentNN.TabIndex = 10;
+            training_pictureBox_CurrentNN.TabStop = false;
             // 
             // Form1
             // 
@@ -280,14 +304,15 @@
             Text = "Simple Feed Forward Neural Network Training and Testing";
             ((System.ComponentModel.ISupportInitialize)training_pictureBox_TrainingPattern).EndInit();
             groupBox_TrainingPattern.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             tabControl_WorkFlow.ResumeLayout(false);
             tabPage_Setup.ResumeLayout(false);
             tabPage_Setup.PerformLayout();
             tabPage_Training.ResumeLayout(false);
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)training_pictureBox_CurrentNN).EndInit();
             ResumeLayout(false);
         }
 
@@ -312,5 +337,7 @@
         private RadioButton radioButton_TestInvFn_False;
         private RadioButton radioButton_TestInvFn_True;
         private Button buttonTestInvFn;
+        private PictureBox training_pictureBox_CurrentNN;
+        private Button buttonDisplayCurrentNN;
     }
 }
