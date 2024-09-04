@@ -82,7 +82,7 @@ namespace Simple_FFNN
         private Random m_Random = new Random();
 
         public List<NNLayer> Layers { get; private set; }
-        public List<Matrix<double>> Weights { get; private set; }
+        public List<Matrix<double>> Weights { get; private set; }   //!FIX: expand to include t-1, t and t+1
 
         public void SetInputs(Vector<double> inputs)
         {
@@ -127,18 +127,28 @@ namespace Simple_FFNN
             }
         }
 
+        public void SetTargetOutputs(Vector<double> targetOutputs)
+        {
+            var lastLayer = Layers[Layers.Count - 1];
+            lastLayer.Delta = targetOutputs - lastLayer.GetOutputsWithoutBias();
+            //!FIX: calculate error signal
+        }
+
         public Vector<double> GetOutputs()
         {
             var lastLayer = Layers[Layers.Count - 1];
+            /* clean up
             Vector<double> outputs = DenseVector.OfArray(new double[lastLayer.Outputs.Count - 1]);
 
             // Copy everything except the bias node
             for (int i = 0; i < outputs.Count; i++)
             {
-                outputs[i] = lastLayer.Outputs[i];
+                outputs[i] = lastLayer.Outputs[i];  //!FIX: add function to NNLayer
             }
 
             return outputs;
+            */
+            return lastLayer.GetOutputsWithoutBias();
         }
     }
 }

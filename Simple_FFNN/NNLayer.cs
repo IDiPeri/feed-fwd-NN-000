@@ -20,9 +20,22 @@ namespace Simple_FFNN
             Outputs[nodeCount] = NeuralNetwork.BiasValue;
         }
 
-        public Vector<double> SumOfInputs { get; set; }
+        public Vector<double> SumOfInputs { get; set; } //!FIX: need sanity check that set doesn't change dimensions
         public Vector<double> Outputs { get; private set; }
-        public Vector<double> Delta { get; private set; }
+        public Vector<double> Delta { get; set; } //!FIX: need sanity check that set doesn't change dimensions
+
+        public Vector<double> GetOutputsWithoutBias()
+        {
+            Vector<double> outputs = DenseVector.OfArray(new double[Outputs.Count - 1]);
+
+            // Copy everything except the bias node
+            for (int i = 0; i < outputs.Count; i++)
+            {
+                outputs[i] = Outputs[i];
+            }
+
+            return outputs;
+        }
 
         public void CalculateOutputs()
         {

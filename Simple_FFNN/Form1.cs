@@ -1,5 +1,6 @@
 namespace Simple_FFNN
 {
+    using System;
     using System.Drawing.Imaging;
     using MathNet.Numerics.LinearAlgebra;
     using MathNet.Numerics.LinearAlgebra.Double;
@@ -218,8 +219,62 @@ namespace Simple_FFNN
         #endregion
 
         #region Training Tab
+        public delegate void Inv2DFunc(bool outputIsPositive,
+                                        out double x, out double y);
 
-        private TrainingPattern DeterminSelectedTraingingPattern()
+        private Inv2DFunc DeterminSelectedTrainingInverseFunction()
+        {
+            Inv2DFunc inverseFunction = null;
+
+            TrainingPattern selectedPattern = DeterminSelectedTrainingPattern();
+            switch (selectedPattern)
+            {
+                case TrainingPattern.LessThan:
+                    inverseFunction = Coordinate_TrainingPattern_LessThan;
+                    break;
+
+                case TrainingPattern.XOR:
+                    inverseFunction = Coordinate_TrainingPattern_XOR;
+                    break;
+
+                case TrainingPattern.CircleInSquare:
+                    inverseFunction = Coordinate_TrainingPattern_CircleInSquare;
+                    break;
+
+                default:
+                    throw new Exception("Unknown training pattern");
+            }
+
+            return inverseFunction;
+        }
+
+        private Func<double, double, double> DeterminSelectedTrainingFunction()
+        {
+            Func<double, double, double> normalizedFunction = null;
+
+            TrainingPattern selectedPattern = DeterminSelectedTrainingPattern();
+            switch (selectedPattern)
+            {
+                case TrainingPattern.LessThan:
+                    normalizedFunction = TrainingPattern_LessThan;
+                    break;
+
+                case TrainingPattern.XOR:
+                    normalizedFunction = TrainingPattern_XOR;
+                    break;
+
+                case TrainingPattern.CircleInSquare:
+                    normalizedFunction = TrainingPattern_CircleInSquare;
+                    break;
+
+                default:
+                    throw new Exception("Unknown training pattern");
+            }
+
+            return normalizedFunction;
+        }
+
+        private TrainingPattern DeterminSelectedTrainingPattern()
         {
             TrainingPattern selectedPattern;
             if (radioButton_LessThan.Checked)
@@ -243,7 +298,7 @@ namespace Simple_FFNN
 
         private void DisplaySelectedTrainingImage()
         {
-            TrainingPattern selectedPattern = DeterminSelectedTraingingPattern();
+            TrainingPattern selectedPattern = DeterminSelectedTrainingPattern();
 
             Bitmap trainingImage;
             int imageWidth = 128;
@@ -292,7 +347,7 @@ namespace Simple_FFNN
 
         private void buttonTestInvFn_Click(object sender, EventArgs e)
         {
-            TrainingPattern selectedPattern = DeterminSelectedTraingingPattern();
+            TrainingPattern selectedPattern = DeterminSelectedTrainingPattern();
 
             Bitmap trainingImage = training_pictureBox_TrainingPattern.Image as Bitmap;
             int imageWidth = 128;
@@ -347,8 +402,9 @@ namespace Simple_FFNN
             training_pictureBox_TrainingPattern.Refresh();
         }
 
-        private void buttonInitializeNN_Click(object sender, EventArgs e)
+        private void buttonTest000_Click(object sender, EventArgs e)
         {
+            /* !FIX: remove this
             m_NeuralNetwork = new NeuralNetwork(inputsCount: 2, hiddenLayerCount: 1, nodesPerHiddenLayer: 9, outputCount: 1);
 
             Vector<double> inputs = DenseVector.OfArray(new double[2]);
@@ -359,6 +415,7 @@ namespace Simple_FFNN
             m_NeuralNetwork.PropagateInputsFwd();
 
             var outputs = m_NeuralNetwork.GetOutputs();
+            */
         }
 
         private double CurrentNNFunction(double x, double y)
@@ -388,6 +445,43 @@ namespace Simple_FFNN
                 oldImage.Dispose();
             }
             training_pictureBox_CurrentNN.Image = currentNNImage;
+        }
+
+        private void training_button_Next_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonTrain1DataPoint_Click(object sender, EventArgs e)
+        {
+            // ///////////////////////////////////////////////////////////////////////////////////////////
+            // Come up with a random x,y coordinate which matches the selected output option True or False
+            Inv2DFunc inverseFunction = DeterminSelectedTrainingInverseFunction();
+
+            bool outputIsPositive = false;
+            double expectedOutput = NeuralNetwork.FALSE;
+            if (radioButton_TestInvFn_True.Checked)
+            {
+                outputIsPositive = true;
+                expectedOutput = NeuralNetwork.TRUE;
+            }
+
+            inverseFunction(outputIsPositive, out double x, out double y);
+            Vector<double> inputs = DenseVector.OfArray(new double[2]);
+            inputs[0] = x;
+            inputs[1] = y;
+
+            // Propagate the inputs forward through the network
+            m_NeuralNetwork.SetInputs(inputs);
+            m_NeuralNetwork.PropagateInputsFwd();
+
+            var outputs = m_NeuralNetwork.GetOutputs();
+
+            // ///////////////////////////////////////////////////////////////////////////////////////////
+            // Calculate the error signal
+            Vector<double> targetOutputs = DenseVector.OfArray(new double[1]);
+            targetOutputs[0] = expectedOutput;
+            m_NeuralNetwork.SetTargetOutputs(targetOutputs);
         }
 
         #endregion

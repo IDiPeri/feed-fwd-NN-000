@@ -47,9 +47,10 @@
             label2 = new Label();
             setup_textBox_NodesPerHiddenLayer = new TextBox();
             tabPage_Training = new TabPage();
-            training_button_Next = new Button();
-            buttonDisplayCurrentNN = new Button();
             training_pictureBox_CurrentNN = new PictureBox();
+            buttonDisplayCurrentNN = new Button();
+            training_button_Next = new Button();
+            buttonTrain1DataPoint = new Button();
             ((System.ComponentModel.ISupportInitialize)training_pictureBox_TrainingPattern).BeginInit();
             groupBox_TrainingPattern.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -62,13 +63,15 @@
             // 
             // buttonInitializeNN
             // 
-            buttonInitializeNN.Location = new Point(308, 390);
+            buttonInitializeNN.BackColor = Color.Red;
+            buttonInitializeNN.Enabled = false;
+            buttonInitializeNN.Location = new Point(40, 321);
             buttonInitializeNN.Name = "buttonInitializeNN";
             buttonInitializeNN.Size = new Size(91, 44);
             buttonInitializeNN.TabIndex = 1;
             buttonInitializeNN.Text = "Test...";
-            buttonInitializeNN.UseVisualStyleBackColor = true;
-            buttonInitializeNN.Click += buttonInitializeNN_Click;
+            buttonInitializeNN.UseVisualStyleBackColor = false;
+            buttonInitializeNN.Click += buttonTest000_Click;
             // 
             // training_pictureBox_TrainingPattern
             // 
@@ -253,6 +256,7 @@
             // 
             // tabPage_Training
             // 
+            tabPage_Training.Controls.Add(buttonTrain1DataPoint);
             tabPage_Training.Controls.Add(training_pictureBox_CurrentNN);
             tabPage_Training.Controls.Add(buttonDisplayCurrentNN);
             tabPage_Training.Controls.Add(training_button_Next);
@@ -266,15 +270,13 @@
             tabPage_Training.Text = "Training";
             tabPage_Training.UseVisualStyleBackColor = true;
             // 
-            // training_button_Next
+            // training_pictureBox_CurrentNN
             // 
-            training_button_Next.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            training_button_Next.Location = new Point(648, 400);
-            training_button_Next.Name = "training_button_Next";
-            training_button_Next.Size = new Size(91, 44);
-            training_button_Next.TabIndex = 8;
-            training_button_Next.Text = "Next...";
-            training_button_Next.UseVisualStyleBackColor = true;
+            training_pictureBox_CurrentNN.Location = new Point(421, 93);
+            training_pictureBox_CurrentNN.Name = "training_pictureBox_CurrentNN";
+            training_pictureBox_CurrentNN.Size = new Size(128, 128);
+            training_pictureBox_CurrentNN.TabIndex = 10;
+            training_pictureBox_CurrentNN.TabStop = false;
             // 
             // buttonDisplayCurrentNN
             // 
@@ -286,13 +288,26 @@
             buttonDisplayCurrentNN.UseVisualStyleBackColor = true;
             buttonDisplayCurrentNN.Click += buttonDisplayCurrentNN_Click;
             // 
-            // training_pictureBox_CurrentNN
+            // training_button_Next
             // 
-            training_pictureBox_CurrentNN.Location = new Point(421, 93);
-            training_pictureBox_CurrentNN.Name = "training_pictureBox_CurrentNN";
-            training_pictureBox_CurrentNN.Size = new Size(128, 128);
-            training_pictureBox_CurrentNN.TabIndex = 10;
-            training_pictureBox_CurrentNN.TabStop = false;
+            training_button_Next.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            training_button_Next.Location = new Point(648, 400);
+            training_button_Next.Name = "training_button_Next";
+            training_button_Next.Size = new Size(91, 44);
+            training_button_Next.TabIndex = 8;
+            training_button_Next.Text = "Next...";
+            training_button_Next.UseVisualStyleBackColor = true;
+            training_button_Next.Click += training_button_Next_Click;
+            // 
+            // buttonTrain1DataPoint
+            // 
+            buttonTrain1DataPoint.Location = new Point(137, 321);
+            buttonTrain1DataPoint.Name = "buttonTrain1DataPoint";
+            buttonTrain1DataPoint.Size = new Size(145, 44);
+            buttonTrain1DataPoint.TabIndex = 11;
+            buttonTrain1DataPoint.Text = "Train 1 data point...";
+            buttonTrain1DataPoint.UseVisualStyleBackColor = true;
+            buttonTrain1DataPoint.Click += buttonTrain1DataPoint_Click;
             // 
             // Form1
             // 
@@ -339,5 +354,6 @@
         private Button buttonTestInvFn;
         private PictureBox training_pictureBox_CurrentNN;
         private Button buttonDisplayCurrentNN;
+        private Button buttonTrain1DataPoint;
     }
 }
