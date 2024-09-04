@@ -482,6 +482,7 @@ namespace Simple_FFNN
             Vector<double> targetOutputs = DenseVector.OfArray(new double[1]);
             targetOutputs[0] = expectedOutput;
             m_NeuralNetwork.SetTargetOutputs(targetOutputs);
+            m_NeuralNetwork.PropagateErrorSignalBackwards();
         }
 
         #endregion

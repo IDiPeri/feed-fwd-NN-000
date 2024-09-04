@@ -55,5 +55,11 @@ namespace Simple_FFNN
             var sigmoid = (1 - v) / (1 + v);
             return sigmoid;
         }
+
+        public static double Derivative_ActivationFunction(double output)
+        {
+            var derivative = (NeuralNetwork.ActivationFunctionCurvature / 2.0) * (1 - output * output);
+            return derivative;
+        }
     }
 }

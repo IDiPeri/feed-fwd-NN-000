@@ -113,6 +113,9 @@ namespace Simple_FFNN
         public List<NNLayer> Layers { get; private set; }
         public List<Matrix<double>[]> Weights { get; private set; }
 
+        public double LearningRate_Eta { get; set; } = 0.9;
+        public double Momentum_Alpha { get; set; } = 0.8;
+
         public void SetInputs(Vector<double> inputs)
         {
             if (inputs.Count != Layers[0].SumOfInputs.Count)
@@ -156,17 +159,56 @@ namespace Simple_FFNN
             }
         }
 
-        public void SetTargetOutputs(Vector<double> targetOutputs)
-        {
-            var lastLayer = Layers[Layers.Count - 1];
-            lastLayer.Delta = targetOutputs - lastLayer.GetOutputsWithoutBias();
-            //!FIX: calculate error signal
-        }
-
         public Vector<double> GetOutputsWithoutBias()
         {
             var lastLayer = Layers[Layers.Count - 1];
             return lastLayer.GetOutputsWithoutBias();
+        }
+
+        public void SetTargetOutputs(Vector<double> targetOutputs)
+        {
+            var lastLayer = Layers[Layers.Count - 1];
+            lastLayer.Delta = targetOutputs - lastLayer.GetOutputsWithoutBias();
+        }
+
+        public void PropagateErrorSignalBackwards()
+        {
+            // Delta for the last layer was already set by SetTargetOutputs() so
+            // start at the layer before that.
+            int lastLayerIndex = (Layers.Count - 1);
+            for (int i = (lastLayerIndex - 1); i > 0; i--)
+            {
+                var current_layer = Layers[i];
+                var next_layer = Layers[i+1];
+                var weights_current_to_next_Layer = Weights[i][CurrentBufferIndex];
+
+                var w_transpose = weights_current_to_next_Layer;
+                var delta_with_bias = w_transpose * next_layer.Delta;
+
+                Vector<double> delta_without_bias = DenseVector.OfArray(new double[delta_with_bias.Count - 1]);
+
+                // Copy everything except the bias node
+                for (int j = 0; j < delta_without_bias.Count; j++)
+                {
+                    delta_without_bias[j] = delta_with_bias[j];
+                }
+
+                //!FIX: refactor and push to NNLayer class
+                // Create a derivative vector of output vector (derivative of the activation function)
+                Vector<double> output_derivative = DenseVector.OfArray(new double[current_layer.Outputs.Count - 1]);
+                for (int k=0; k < output_derivative.Count; k++)
+                {
+                    output_derivative[k] = NNLayer.Derivative_ActivationFunction(current_layer.Outputs[k]);
+                }
+
+                // Elementwise multiply derivative of the output by the error signal
+                var new_delta = DenseVector.OfArray(new double[output_derivative.Count]);
+                for(int l=0; l < new_delta.Count; l++)
+                {
+                    new_delta[l] = output_derivative[l] * delta_without_bias[l];
+                }
+                current_layer.Delta = new_delta;
+            }
         }
     }
 }
