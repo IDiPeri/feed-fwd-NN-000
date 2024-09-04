@@ -60,17 +60,17 @@ namespace Simple_FFNN
             Layers.Add(outputLayer);
 
             // Create all of the weight matrices inbetween each layer
-            Weights_NEW = new List<Matrix<double>[]>();
+            Weights = new List<Matrix<double>[]>();
             for (int i = 1; i < Layers.Count; i++)
             {
                 int previousOutputCount = Layers[i-1].Outputs.Count;
                 int currentInputCount = Layers[i].SumOfInputs.Count;
 
                 // Weight matrix should be previousOutputCount (rows) x currentInputCount (count)
-                Matrix<double>[] weights_new = new Matrix<double>[TimeBufferSize];
+                Matrix<double>[] weights = new Matrix<double>[TimeBufferSize];
                 for(int t=0; t < TimeBufferSize; t++)
                 {
-                    weights_new[t] = DenseMatrix.OfArray(new double[previousOutputCount, currentInputCount]);
+                    weights[t] = DenseMatrix.OfArray(new double[previousOutputCount, currentInputCount]);
                 }
 
                 // Initialize the weights
@@ -82,17 +82,17 @@ namespace Simple_FFNN
                         {
                             if (t == 0)
                             {
-                                weights_new[t][r, c] = ((m_Random.NextDouble() * 2.0) - 1.0) * InitialWeightRange;
+                                weights[t][r, c] = ((m_Random.NextDouble() * 2.0) - 1.0) * InitialWeightRange;
                             }
                             else
                             {
-                                weights_new[t][r, c] = weights_new[0][r, c];
+                                weights[t][r, c] = weights[0][r, c];
                             }
                         }
                     }
                 }
 
-                Weights_NEW.Add(weights_new);
+                Weights.Add(weights);
             }
         }
 
@@ -111,7 +111,7 @@ namespace Simple_FFNN
         private Random m_Random = new Random();
 
         public List<NNLayer> Layers { get; private set; }
-        public List<Matrix<double>[]> Weights_NEW { get; private set; }
+        public List<Matrix<double>[]> Weights { get; private set; }
 
         public void SetInputs(Vector<double> inputs)
         {
@@ -146,10 +146,10 @@ namespace Simple_FFNN
             for (int i = 1; i < Layers.Count; i++)
             {
                 var previousOutput = Layers[i - 1].Outputs;
-                var weights_new = Weights_NEW[i - 1][CurrentBufferIndex];
+                var weights = Weights[i - 1][CurrentBufferIndex];
 
                 // !FIX: should we NOT make this public and add SetSumOfInputs for sanity check about dimensions?
-                Layers[i].SumOfInputs = previousOutput * weights_new;
+                Layers[i].SumOfInputs = previousOutput * weights;
 
                 // Put the sum of inputs through the activation function
                 Layers[i].CalculateOutputs();
@@ -163,20 +163,9 @@ namespace Simple_FFNN
             //!FIX: calculate error signal
         }
 
-        public Vector<double> GetOutputs()
+        public Vector<double> GetOutputsWithoutBias()
         {
             var lastLayer = Layers[Layers.Count - 1];
-            /* clean up
-            Vector<double> outputs = DenseVector.OfArray(new double[lastLayer.Outputs.Count - 1]);
-
-            // Copy everything except the bias node
-            for (int i = 0; i < outputs.Count; i++)
-            {
-                outputs[i] = lastLayer.Outputs[i];  //!FIX: add function to NNLayer
-            }
-
-            return outputs;
-            */
             return lastLayer.GetOutputsWithoutBias();
         }
     }

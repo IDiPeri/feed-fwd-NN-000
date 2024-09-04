@@ -427,7 +427,7 @@ namespace Simple_FFNN
             m_NeuralNetwork.SetInputs(inputs);
             m_NeuralNetwork.PropagateInputsFwd();
 
-            var outputs = m_NeuralNetwork.GetOutputs();
+            var outputs = m_NeuralNetwork.GetOutputsWithoutBias();
             return outputs[0];
         }
 
@@ -475,7 +475,7 @@ namespace Simple_FFNN
             m_NeuralNetwork.SetInputs(inputs);
             m_NeuralNetwork.PropagateInputsFwd();
 
-            var outputs = m_NeuralNetwork.GetOutputs();
+            var outputs = m_NeuralNetwork.GetOutputsWithoutBias();
 
             // ///////////////////////////////////////////////////////////////////////////////////////////
             // Calculate the error signal
