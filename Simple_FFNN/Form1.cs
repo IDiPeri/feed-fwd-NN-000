@@ -24,6 +24,8 @@ namespace Simple_FFNN
         {
             InitializeComponent();
 
+            tabPage_Training.BackColor = Color.Red;
+
             SelectTab(0);
             DisplaySelectedTrainingImage();
         }
@@ -34,6 +36,7 @@ namespace Simple_FFNN
         #region Data Members
         private NeuralNetwork m_NeuralNetwork;
         private Random m_Random = new Random();
+        private int m_TrainngPointCount = 0;
         #endregion
 
         private void SelectTab(WorkflowTabs tabIndex)
@@ -63,6 +66,24 @@ namespace Simple_FFNN
                     else if (Math.Abs(fnOutput - NeuralNetwork.FALSE) < THRESHOLD_FLOATINGPOINT_LOGIC)
                     {
                         pixelColor = Color.Red;
+                    }
+                    else
+                    {
+                        // Add slight color to gray areas
+                        double deltaToTrue = Math.Abs(fnOutput - NeuralNetwork.TRUE);
+                        double deltaToFalse = Math.Abs(fnOutput - NeuralNetwork.FALSE);
+                        if (deltaToTrue > deltaToFalse)
+                        {
+                            var v = (deltaToTrue - THRESHOLD_FLOATINGPOINT_LOGIC) / (1.0 - THRESHOLD_FLOATINGPOINT_LOGIC);
+                            v = v * 16;
+                            pixelColor = Color.FromArgb(128, (int)(156 + v), 128);
+                        }
+                        else if (deltaToFalse > deltaToTrue)
+                        {
+                            var v = (deltaToFalse - THRESHOLD_FLOATINGPOINT_LOGIC) / (1.0 - THRESHOLD_FLOATINGPOINT_LOGIC);
+                            v = v * 16;
+                            pixelColor = Color.FromArgb((int)(156 + v), 128, 128);
+                        }
                     }
 
                     outputImage.SetPixel(x_pixel, y_pixel, pixelColor);
@@ -213,6 +234,9 @@ namespace Simple_FFNN
                                                 nodesPerHiddenLayer: nodesPerHiddenLayer,
                                                 outputCount: 1);
 
+            m_TrainngPointCount = 0;
+
+            tabPage_Training.BackColor = Color.Transparent;
             SelectTab(WorkflowTabs.Training);
         }
 
@@ -433,6 +457,11 @@ namespace Simple_FFNN
 
         private void buttonDisplayCurrentNN_Click(object sender, EventArgs e)
         {
+            DisplayCurrentNN();
+        }
+
+        private void DisplayCurrentNN()
+        {
             Bitmap currentNNImage;
             int imageWidth = 128;
             int imageHeight = 128;
@@ -471,6 +500,24 @@ namespace Simple_FFNN
             inputs[0] = x;
             inputs[1] = y;
 
+            // ###########################################################################################
+            // Display the data point we just trained
+            Bitmap trainingImage = training_pictureBox_TrainingPattern.Image as Bitmap;
+            int imageWidth = 128;
+            int imageHeight = 128;
+
+            Color pixelColor = Color.Black;
+            if (outputIsPositive)
+            {
+                outputIsPositive = true;
+                pixelColor = Color.White;
+            }
+            int x_pixel = (int)((x + 0.5) * (imageWidth - 1) + 0.5);
+            int y_pixel = (int)((y + 0.5) * (imageHeight - 1) + 0.5);
+            trainingImage.SetPixel(x_pixel, y_pixel, pixelColor);
+            training_pictureBox_TrainingPattern.Refresh();
+            // ###########################################################################################
+
             // Propagate the inputs forward through the network
             m_NeuralNetwork.SetInputs(inputs);
             m_NeuralNetwork.PropagateInputsFwd();
@@ -483,8 +530,54 @@ namespace Simple_FFNN
             targetOutputs[0] = expectedOutput;
             m_NeuralNetwork.SetTargetOutputs(targetOutputs);
             m_NeuralNetwork.PropagateErrorSignalBackwards();
+
+            // ///////////////////////////////////////////////////////////////////////////////////////////
+            // Update the weights
+            m_NeuralNetwork.UpdateWeights_ConjugateGradient();
+
+            // Increment the buffer index to use the newly updated weights next time
+            m_NeuralNetwork.IncrementCurrentBufferIndex();
+
+            DisplayCurrentNN();
+            m_TrainngPointCount = m_TrainngPointCount + 1;
+
+            labelTrainingPointCount.Text = m_TrainngPointCount.ToString();
         }
 
         #endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (timer1.Enabled)
+            {
+                timer1.Stop();
+            }
+            else
+            {
+                timer1.Start();
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            // Alternate T/F
+            if (radioButton_TestInvFn_True.Checked)
+            {
+                radioButton_TestInvFn_True.Checked = false;
+                radioButton_TestInvFn_False.Checked = true;
+            }
+            else if (radioButton_TestInvFn_False.Checked)
+            {
+                radioButton_TestInvFn_True.Checked = true;
+                radioButton_TestInvFn_False.Checked = false;
+            }
+
+            buttonTrain1DataPoint_Click(this, EventArgs.Empty);
+
+            m_NeuralNetwork.Momentum_Alpha *= 0.99789;
+            m_NeuralNetwork.LearningRate_Eta *= 0.99789;
+            labelAlphaMomentum.Text = m_NeuralNetwork.Momentum_Alpha.ToString();
+            labelEtaLearning.Text = m_NeuralNetwork.LearningRate_Eta.ToString();
+        }
     }
 }

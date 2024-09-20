@@ -96,6 +96,11 @@ namespace Simple_FFNN
             }
         }
 
+        public void IncrementCurrentBufferIndex()
+        {
+            CurrentBufferIndex = NextBufferIndex;
+        }
+
         public int CurrentBufferIndex { get; private set; } = 0;
 
         private int PreviousBufferIndex
@@ -176,7 +181,7 @@ namespace Simple_FFNN
             // Delta for the last layer was already set by SetTargetOutputs() so
             // start at the layer before that.
             int lastLayerIndex = (Layers.Count - 1);
-            for (int i = (lastLayerIndex - 1); i > 0; i--)
+            for (int i = (lastLayerIndex - 1); i >= 0; i--)
             {
                 var current_layer = Layers[i];
                 var next_layer = Layers[i+1];
@@ -208,6 +213,32 @@ namespace Simple_FFNN
                     new_delta[l] = output_derivative[l] * delta_without_bias[l];
                 }
                 current_layer.Delta = new_delta;
+            }
+        }
+
+        public void UpdateWeights_ConjugateGradient()
+        {
+            // error x output transpose = gradient
+            // should be same dim as weights
+            int lastLayerIndex = (Layers.Count - 1);
+            for (int i = (lastLayerIndex - 1); i >= 0; i--)
+            {
+                var current_layer = Layers[i];
+                var next_layer = Layers[i + 1];
+                var weights_current_to_next_Layer = Weights[i][CurrentBufferIndex];
+
+                // Multiply output x delta to get gradient
+                // !FIX: I just want output transposed so this seems excessive to get that
+                var outputTransposed = Matrix<double>.Build.DenseOfColumnVectors(current_layer.Outputs).Transpose();
+                var deltaAsMatrix = Matrix<double>.Build.DenseOfColumnVectors(next_layer.Delta);
+                var gradient = deltaAsMatrix * outputTransposed;
+                var gradient_scaled = gradient * LearningRate_Eta;
+
+                var weight_momentum = Weights[i][CurrentBufferIndex] - Weights[i][PreviousBufferIndex];
+                var weight_momentum_scaled = weight_momentum * Momentum_Alpha;
+
+                // !FIX: why is gradient scaled transposed?
+                Weights[i][NextBufferIndex] = weight_momentum_scaled + gradient_scaled.Transpose();
             }
         }
     }

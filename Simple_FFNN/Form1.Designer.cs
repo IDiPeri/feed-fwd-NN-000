@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             buttonInitializeNN = new Button();
             training_pictureBox_TrainingPattern = new PictureBox();
             label1 = new Label();
@@ -47,10 +48,15 @@
             label2 = new Label();
             setup_textBox_NodesPerHiddenLayer = new TextBox();
             tabPage_Training = new TabPage();
+            button1 = new Button();
+            labelTrainingPointCount = new Label();
+            buttonTrain1DataPoint = new Button();
             training_pictureBox_CurrentNN = new PictureBox();
             buttonDisplayCurrentNN = new Button();
             training_button_Next = new Button();
-            buttonTrain1DataPoint = new Button();
+            timer1 = new System.Windows.Forms.Timer(components);
+            labelEtaLearning = new Label();
+            labelAlphaMomentum = new Label();
             ((System.ComponentModel.ISupportInitialize)training_pictureBox_TrainingPattern).BeginInit();
             groupBox_TrainingPattern.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -256,6 +262,10 @@
             // 
             // tabPage_Training
             // 
+            tabPage_Training.Controls.Add(labelAlphaMomentum);
+            tabPage_Training.Controls.Add(labelEtaLearning);
+            tabPage_Training.Controls.Add(button1);
+            tabPage_Training.Controls.Add(labelTrainingPointCount);
             tabPage_Training.Controls.Add(buttonTrain1DataPoint);
             tabPage_Training.Controls.Add(training_pictureBox_CurrentNN);
             tabPage_Training.Controls.Add(buttonDisplayCurrentNN);
@@ -269,6 +279,35 @@
             tabPage_Training.TabIndex = 1;
             tabPage_Training.Text = "Training";
             tabPage_Training.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(137, 371);
+            button1.Name = "button1";
+            button1.Size = new Size(188, 44);
+            button1.TabIndex = 13;
+            button1.Text = "Start / Stop Alt. Training";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // labelTrainingPointCount
+            // 
+            labelTrainingPointCount.AutoSize = true;
+            labelTrainingPointCount.Location = new Point(331, 333);
+            labelTrainingPointCount.Name = "labelTrainingPointCount";
+            labelTrainingPointCount.Size = new Size(15, 20);
+            labelTrainingPointCount.TabIndex = 12;
+            labelTrainingPointCount.Text = "-";
+            // 
+            // buttonTrain1DataPoint
+            // 
+            buttonTrain1DataPoint.Location = new Point(137, 321);
+            buttonTrain1DataPoint.Name = "buttonTrain1DataPoint";
+            buttonTrain1DataPoint.Size = new Size(188, 44);
+            buttonTrain1DataPoint.TabIndex = 11;
+            buttonTrain1DataPoint.Text = "Train 1 data point...";
+            buttonTrain1DataPoint.UseVisualStyleBackColor = true;
+            buttonTrain1DataPoint.Click += buttonTrain1DataPoint_Click;
             // 
             // training_pictureBox_CurrentNN
             // 
@@ -299,15 +338,27 @@
             training_button_Next.UseVisualStyleBackColor = true;
             training_button_Next.Click += training_button_Next_Click;
             // 
-            // buttonTrain1DataPoint
+            // timer1
             // 
-            buttonTrain1DataPoint.Location = new Point(137, 321);
-            buttonTrain1DataPoint.Name = "buttonTrain1DataPoint";
-            buttonTrain1DataPoint.Size = new Size(145, 44);
-            buttonTrain1DataPoint.TabIndex = 11;
-            buttonTrain1DataPoint.Text = "Train 1 data point...";
-            buttonTrain1DataPoint.UseVisualStyleBackColor = true;
-            buttonTrain1DataPoint.Click += buttonTrain1DataPoint_Click;
+            timer1.Tick += timer1_Tick;
+            // 
+            // labelEtaLearning
+            // 
+            labelEtaLearning.AutoSize = true;
+            labelEtaLearning.Location = new Point(331, 371);
+            labelEtaLearning.Name = "labelEtaLearning";
+            labelEtaLearning.Size = new Size(15, 20);
+            labelEtaLearning.TabIndex = 14;
+            labelEtaLearning.Text = "-";
+            // 
+            // labelAlphaMomentum
+            // 
+            labelAlphaMomentum.AutoSize = true;
+            labelAlphaMomentum.Location = new Point(331, 395);
+            labelAlphaMomentum.Name = "labelAlphaMomentum";
+            labelAlphaMomentum.Size = new Size(15, 20);
+            labelAlphaMomentum.TabIndex = 15;
+            labelAlphaMomentum.Text = "-";
             // 
             // Form1
             // 
@@ -327,6 +378,7 @@
             tabPage_Setup.ResumeLayout(false);
             tabPage_Setup.PerformLayout();
             tabPage_Training.ResumeLayout(false);
+            tabPage_Training.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)training_pictureBox_CurrentNN).EndInit();
             ResumeLayout(false);
         }
@@ -355,5 +407,10 @@
         private PictureBox training_pictureBox_CurrentNN;
         private Button buttonDisplayCurrentNN;
         private Button buttonTrain1DataPoint;
+        private Label labelTrainingPointCount;
+        private Button button1;
+        private System.Windows.Forms.Timer timer1;
+        private Label labelAlphaMomentum;
+        private Label labelEtaLearning;
     }
 }
