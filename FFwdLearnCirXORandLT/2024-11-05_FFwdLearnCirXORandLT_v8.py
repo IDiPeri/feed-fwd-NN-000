@@ -159,21 +159,25 @@ def main():
 
     n_points = 100000
 
-    """    
-    # Generate the data set for a CIRCLE
-    Xinp_all, Yout_all = build_dataset_CIRCLE(n_points, g, device)
-    datasetname = 'CIRCLE'
-    """
-    
-    # Generate the data set for a LESSTHAN
-    Xinp_all, Yout_all = build_dataset_LESSTHAN(n_points, g, device)
-    datasetname = 'LESSTHAN'
+    print('Choose training set:')
+    print('0 - Circle')
+    print('1 - Less-Than')
+    print('2 - XOR')
+    print('Enter 0,1,2> ', end='')
+    choice = int(input())
 
-    """
-    # Generate the data set for a XOR
-    Xinp_all, Yout_all = build_dataset_XOR(n_points, g, device)
-    datasetname = 'XOR'
-    """
+    if (choice == 0):
+        # Generate the data set for a CIRCLE
+        Xinp_all, Yout_all = build_dataset_CIRCLE(n_points, g, device)
+        datasetname = 'CIRCLE'
+    elif (choice == 1):
+        # Generate the data set for a LESSTHAN
+        Xinp_all, Yout_all = build_dataset_LESSTHAN(n_points, g, device)
+        datasetname = 'LESSTHAN'
+    else:
+        # Generate the data set for a XOR
+        Xinp_all, Yout_all = build_dataset_XOR(n_points, g, device)
+        datasetname = 'XOR'
 
     # split: training, dev/validation, test
     #80% : training
